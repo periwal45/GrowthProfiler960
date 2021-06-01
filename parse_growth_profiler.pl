@@ -3,12 +3,12 @@
 use strict;
 use warnings;
 
-opendir(DIR, "/Users/periwal/ShikiFactory/WP3/GrowthProfiler/OD/") || die $!;
+opendir(DIR, "/Users/periwal/ShikiFactory/WP3/GrowthProfiler/OD") || die $!;
 my @dir = readdir(DIR);
 
 foreach my $f1(@dir){
 
-	next unless $f1 =~ /(^SF100)/;	#to read all bug folders starting with NT
+	next unless $f1 =~ /(^SF100.*)/;	#to read all bug folders starting with NT
 
 	my $name1 = $1;
 
@@ -17,7 +17,7 @@ foreach my $f1(@dir){
 
 	foreach my $f2(@contents){
 
-		next unless $f2 =~ /(^Replicate.*)/;	#to read all Replicate folders starting with Replicate
+		next unless $f2 =~ /(^all_bugs.*)/;	#to read all Replicate folders starting with Replicate
 
 		my $name2 = $1;
 
@@ -26,11 +26,11 @@ foreach my $f1(@dir){
 
 		foreach my $f3(@rep){
 
-		next unless $f3 =~ /(^plate.*)\.csv/;
+		next unless $f3 =~ /(^MTP.*)\.csv/;
 
 		my $name3 = $1;
 
-		$name3 = lc($name3);
+		#$name3 = lc($name3);
 
 		my $file = "/Users/periwal/ShikiFactory/WP3/GrowthProfiler/OD/$f1/$f2/$f3";
 		open my $fh, $file or die $!;

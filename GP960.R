@@ -18,7 +18,7 @@ library(qvalue) #estimates FDR from a list of input p-values
 library(colr) #regex on columns
 
 #read all files with .tab extension
-file.names <- list.files(path = '/Users/periwal/ShikiFactory/WP3/GrowthProfiler/', recursive = TRUE, pattern = "\\.tab$") #recursive reads through all subfolders and files
+file.names <- list.files(path = '/Users/periwal/ShikiFactory/WP3/GrowthProfiler/', recursive = TRUE, pattern = "SF100_all.*\\.tab$") #recursive reads through all subfolders and files
 file.names
 
 #read plate
