@@ -110,11 +110,16 @@ for(i in 1:length(file.names)){
 View(fitted_values)
 nrow(fitted_values) #6912
 
-mean_fit<-fitted_values %>% dplyr::group_by(bug,strain,time) %>% summarise(avOD = mean(OD), avfit = mean(fitted))
-View(mean_fit)
+mean_fit_GP<-fitted_values %>% filter(`file.names[i]` == "OD/SF100/SF100_all_bugs_growthtest_MTP02_OD_GPplate.tab") %>% dplyr::group_by(bug,strain,time) %>% summarise(avOD = mean(OD), avfit = mean(fitted))
+View(mean_fit_GP)
 
 View(gc_fit_params)
 nrow(gc_fit_params) #should be equal to number of wells: 96 for 1 plate
+
+mean_fit_white<-fitted_values %>% filter(`file.names[i]` == "OD/SF100/SF100_all_bugs_growthtest_MTP03_OD_whiteplate.tab") %>% dplyr::group_by(bug,strain,time) %>% summarise(avOD = mean(OD), avfit = mean(fitted))
+mean_fit_black<-fitted_values %>% filter(`file.names[i]` == "OD/SF100/SF100_all_bugs_growthtest_MTP09_OD_blackplate.tab") %>% dplyr::group_by(bug,strain,time) %>% summarise(avOD = mean(OD), avfit = mean(fitted))
+
+
 
 # set global theme for all plots
 
@@ -122,11 +127,35 @@ th<-theme(plot.title = element_text(size = 12, face = "bold"),axis.title=element
           axis.text.x = element_text(size=10, color = "black"),axis.text.y = element_text(size=10, color = "black"))
 
 #CairoSVG(file="/Users/periwal/ShikiFactory/WP3/GrowthProfiler/sucrose.svg", width = 5, height = 4, bg = "white")
-pdf(file = "/Users/periwal/ShikiFactory/WP3/GrowthProfiler/OD/SF100/all_bugs_growthtest/GP_bugstestgrowth.pdf", width = 18, height = 10)
-fitted_values %>% dplyr::group_by(bug,strain,time) %>% summarise(OD = mean(OD), fitted = mean(fitted)) %>% 
-  dplyr::group_by(bug,strain) %>% 
-ggplot(aes(x=time, y=fitted)) + geom_line(aes(color=strain)) + 
-  geom_point(aes(y=OD,color=strain), size=0.05) + 
+# pdf(file = "/Users/periwal/ShikiFactory/WP3/GrowthProfiler/OD/SF100/all_bugs_growthtest/GP_bugstestgrowth_GPplate.pdf", width = 18, height = 10)
+# mean_fit %>% dplyr::group_by(bug,strain,time) %>% summarise(OD = mean(OD), fitted = mean(fitted)) %>% 
+#   dplyr::group_by(bug,strain) %>% 
+# ggplot(aes(x=time, y=fitted)) + geom_line(aes(color=strain)) + 
+#   geom_point(aes(y=OD,color=strain), size=0.05) + 
+#   scale_x_continuous(name = "Time (Hours)", limits = c(0,24)) + scale_y_continuous(name="bg corrected OD",) +
+#   th + theme_bw(base_rect_size = 0.1) + theme(legend.position="right") + facet_wrap("bug", scales = "free", ncol = 8)
+# dev.off()
+
+pdf(file = "/Users/periwal/ShikiFactory/WP3/GrowthProfiler/OD/SF100/all_bugs_growthtest/GP_bugstestgrowth_GPplate.pdf", width = 18, height = 10)
+mean_fit_GP %>% dplyr::group_by(bug,strain,time) %>%
+  ggplot(aes(x=time, y=avfit)) + geom_line(aes(color=strain)) + 
+  geom_point(aes(y=avOD,color=strain), size=0.05) + 
+  scale_x_continuous(name = "Time (Hours)", limits = c(0,24)) + scale_y_continuous(name="bg corrected OD",) +
+  th + theme_bw(base_rect_size = 0.1) + theme(legend.position="right") + facet_wrap("bug", scales = "free", ncol = 8)
+dev.off()
+
+pdf(file = "/Users/periwal/ShikiFactory/WP3/GrowthProfiler/OD/SF100/all_bugs_growthtest/GP_bugstestgrowth_whiteplate.pdf", width = 18, height = 10)
+mean_fit_white %>% dplyr::group_by(bug,strain,time) %>%
+  ggplot(aes(x=time, y=avfit)) + geom_line(aes(color=strain)) + 
+  geom_point(aes(y=avOD,color=strain), size=0.05) + 
+  scale_x_continuous(name = "Time (Hours)", limits = c(0,24)) + scale_y_continuous(name="bg corrected OD",) +
+  th + theme_bw(base_rect_size = 0.1) + theme(legend.position="right") + facet_wrap("bug", scales = "free", ncol = 8)
+dev.off()
+
+pdf(file = "/Users/periwal/ShikiFactory/WP3/GrowthProfiler/OD/SF100/all_bugs_growthtest/GP_bugstestgrowth_blackplate.pdf", width = 18, height = 10)
+mean_fit_black %>% dplyr::group_by(bug,strain,time) %>%
+  ggplot(aes(x=time, y=avfit)) + geom_line(aes(color=strain)) + 
+  geom_point(aes(y=avOD,color=strain), size=0.05) + 
   scale_x_continuous(name = "Time (Hours)", limits = c(0,24)) + scale_y_continuous(name="bg corrected OD",) +
   th + theme_bw(base_rect_size = 0.1) + theme(legend.position="right") + facet_wrap("bug", scales = "free", ncol = 8)
 dev.off()
